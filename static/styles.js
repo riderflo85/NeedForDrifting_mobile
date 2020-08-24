@@ -1,15 +1,4 @@
-import { StyleSheet } from 'react-native';
-
-
-const test = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-});
-export default test;
+import { StyleSheet, Platform } from 'react-native';
 
 
 export const loginStyle = StyleSheet.create({
@@ -17,8 +6,6 @@ export const loginStyle = StyleSheet.create({
         flex: 1,
         paddingTop: 30,
         backgroundColor: 'rgb(228,228,228)'
-        // alignItems: "center",
-        // justifyContent: "center",
     },
     boxLogo: {
         flex: 0.6,
@@ -30,18 +17,16 @@ export const loginStyle = StyleSheet.create({
     },
     inputBox: {
         flex: 1,
-        // width: '50%',
         justifyContent: "center",
-        marginTop: 50,
+        marginTop: '10%',
         backgroundColor: 'white',
-        paddingBottom: 15,
-        paddingHorizontal: 40,
+        paddingHorizontal: 50,
         borderTopStartRadius: 35,
         borderTopEndRadius: 35
     },
     welcome: {
-        marginTop: 15,
-        marginBottom: 30,
+        marginTop: '4%',
+        marginBottom: '4%',
         fontSize: 30,
         fontWeight: 'bold',
         textAlign: 'center'
@@ -60,7 +45,7 @@ export const loginStyle = StyleSheet.create({
         flexDirection: 'row',
         alignItems: "center",
         justifyContent: "space-between",
-        marginBottom: 20,
+        marginBottom: Platform.OS === 'ios' ? '7%' : '3%',
     },
     buttonLogin: {
         alignSelf: 'center',

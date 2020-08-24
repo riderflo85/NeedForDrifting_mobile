@@ -64,4 +64,25 @@ export const loginStyle = StyleSheet.create({
         fontSize: 20,
         fontWeight: '500',
     },
+    loading: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 100,
+        bottom: 0,
+        alignItems: "center",
+        justifyContent: "center",
+    }
+});
+
+
+export const loginStyleError = StyleSheet.create({
+    welcome: {
+        marginTop: '4%',
+        marginBottom: '4%',
+        fontSize: 15,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: 'red',
+    },
 });

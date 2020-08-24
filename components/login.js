@@ -1,15 +1,19 @@
 import React from 'react';
-import { View, TextInput, Text, Image, Switch, TouchableOpacity } from 'react-native';
-import { loginStyle } from '../static/styles';
+import { View, TextInput, Text, Image, Switch, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
+import { loginStyle, loginStyleError } from '../static/styles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { authenticateUser } from '../api/NFD_api';
 
 
 class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            stayConnected: true
+            stayConnected: true,
+            connected: false,
+            errorLogin: false,
+            isLoading: false,
         };
         this.username = '';
         this.password = '';
@@ -35,7 +39,43 @@ class Login extends React.Component {
     }
 
     _loginUser() {
-        console.log(this.username, this.password, this.api, this.state.stayConnected);
+        this.setState({isLoading: true});
+        authenticateUser(this.username, this.password, this.api).then(data => {
+            if (!data.error) {
+                this.setState({
+                    connected: true,
+                    errorLogin: false,
+                });
+            } else {
+                this.setState({
+                    connected: false,
+                    errorLogin: true,
+                });
+            }
+            this.setState({isLoading: false});
+        })
+    }
+
+    _ifLoginError() {
+        if (!this.state.errorLogin) {
+            return (
+                <Text style={loginStyle.welcome}>Bienvenue !</Text>
+            );
+        } else {
+            return (
+                <Text style={loginStyleError.welcome}>Les informations renseignées sont incorrects, merci de corriger cela !</Text>
+            );
+        }
+    }
+
+    _displayLoading() {
+        if (this.state.isLoading) {
+            return (
+                <View style={loginStyle.loading}>
+                    <ActivityIndicator size="large"/>
+                </View>
+            );
+        }
     }
 
     render() {
@@ -48,7 +88,7 @@ class Login extends React.Component {
                 <View style={loginStyle.inputBox}>
                     <KeyboardAwareScrollView>
                         <View>
-                            <Text style={loginStyle.welcome}>Bienvenue !</Text>
+                            {this._ifLoginError()}
                             <Text style={loginStyle.titleInput} >Nom d'utilisateur</Text>
                             <TextInput style={loginStyle.inputArea} onChangeText={(text) => this._usernameInput(text)}/>
                             <Text style={loginStyle.titleInput} >Mot de passe</Text>
@@ -69,6 +109,7 @@ class Login extends React.Component {
                                 <Text>Rester connecté ? </Text>
                                 <Switch
                                     trackColor={{ false: "#767577", true: "#0d96d1" }}
+                                    thumbColor={Platform.OS === 'ios' ? 'white' : this.state.stayConnected ? "rgb(228,228,228)" : "#f4f3f4"}
                                     onValueChange={this._userStayConnected}
                                     value={this.state.stayConnected}
                                 />
@@ -79,12 +120,17 @@ class Login extends React.Component {
                             >
                                 <View style={loginStyle.blocButtonLogin}>
                                     <Text style={loginStyle.textButtonLogin}>CONNEXION</Text>
-                                    <MaterialCommunityIcons name="arrow-right-drop-circle-outline" size={25} color="white"/>
+                                    <MaterialCommunityIcons
+                                        name="arrow-right-drop-circle-outline"
+                                        size={25}
+                                        color="white"
+                                    />
                                 </View>
                             </TouchableOpacity>
                         </View>
                     </KeyboardAwareScrollView>
                 </View>
+                {this._displayLoading()}
             </View>
             
         );

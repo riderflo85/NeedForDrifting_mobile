@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, TextInput, Text, Image, Switch, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
 import { loginStyle, loginStyleError } from '../static/styles';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { authenticateUser } from '../api/NFD_api';
 
 

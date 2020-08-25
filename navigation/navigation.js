@@ -17,7 +17,7 @@ function ListServerStackScreen() {
                 name="All servers"
                 component={ListServer}
                 options={{
-                    title: "Vos serveurs Assetto Corsa",
+                    title: "Assetto Corsa",
                     headerStyle: {
                         backgroundColor: '#0d96d1'
                     },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StatusBar } from 'react-native';
 
 
 class ListServer extends React.Component {
@@ -12,7 +12,7 @@ class ListServer extends React.Component {
     render() {
         return (
             <View>
-
+                <StatusBar backgroundColor="#0d96d1" barStyle="light-content"/>
             </View>
         );
     }

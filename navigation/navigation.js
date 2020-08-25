@@ -16,12 +16,24 @@ function ListServerStackScreen() {
             <ListServerStack.Screen
                 name="All servers"
                 component={ListServer}
-                options={{title: "Vos serveurs Assetto Corsa"}}
+                options={{
+                    title: "Vos serveurs Assetto Corsa",
+                    headerStyle: {
+                        backgroundColor: '#0d96d1'
+                    },
+                    headerTintColor: '#fff',
+                }}
             />
             <ListServerStack.Screen
                 name="Detail server"
                 component={DetailServer}
-                options={{title: "Gérer votre serveur AC"}}
+                options={{
+                    title: "Gérer votre serveur AC",
+                    headerStyle: {
+                        backgroundColor: '#0d96d1'
+                    },
+                    headerTintColor: '#fff',
+                }}
             />
         </ListServerStack.Navigator>
     );
@@ -34,12 +46,24 @@ function SettingsUserScreen() {
             <SettingsUserStack.Screen
                 name="Settings"
                 component={UserSettings}
-                options={{title: 'Paramètres'}}
+                options={{
+                    title: 'Paramètres',
+                    headerStyle: {
+                        backgroundColor: '#0d96d1'
+                    },
+                    headerTintColor: '#fff',
+                }}
             />
             <SettingsUserStack.Screen
                 name="User data"
                 component={UserData}
-                options={{title: 'Informations personnelles'}}
+                options={{
+                    title: 'Informations personnelles',
+                    headerStyle: {
+                        backgroundColor: '#0d96d1'
+                    },
+                    headerTintColor: '#fff',
+                }}
             />
         </SettingsUserStack.Navigator>
     );

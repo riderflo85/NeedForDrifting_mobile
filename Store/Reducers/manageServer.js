@@ -1,19 +1,22 @@
 const initialState = {
-    servers: []
+    servers: [],
+    userData: {
+        username: 'admin',
+        password: '',
+        token: 'Ihzt3xi5R5jqCMgVVi9UMwmi',
+        urlServer: 'http://192.168.1.32:8000',
+    },
 };
 
 function manageServer(state=initialState, action) {
     let nextState;
 
     switch (action.type) {
-        case 'RUN_SERVER':
-            // run the server
-            console.log('dans le reducer');
+        case 'GET_SERVERS':
             nextState = {
                 ...state,
                 servers: action.value
             };
-            console.log(nextState);
             return nextState || state // renvoi nextState si celui-ci est différent de undefined
     
         default:

@@ -54,7 +54,8 @@ class ServerItem extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        servers: state.servers
+        servers: state.servers,
+        userData: state.userData,
     };
 }
 

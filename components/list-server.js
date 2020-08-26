@@ -13,19 +13,19 @@ class ListServer extends React.Component {
         this.state = {
             servers: [],
         };
-        this.token = 'Ihzt3xi5R5jqCMgVVi9UMwmi'; // a retirer après les tests !!!!!!!!
-        this.username = 'admin'; // a retirer après les tests !!!!!!!
-        this.urlServer = "0"; // a retirer après les tests !!!!!!!
+        this.token = this.props.userData.token; 
+        this.username = this.props.userData.username; 
+        this.urlServer = this.props.userData.urlServer; 
     }
 
     _getServers() {
         if (this.urlServer !== "") {
-            getAllServers(this.username, this.token).then(data => {
+            getAllServers(this.urlServer, this.username, this.token).then(data => {
                 this.setState({servers: data.servers});
                 if (this.props.servers.length === 0) {
                     // console.log('test');
                     // console.log(this.state.servers);
-                    const action = {type: 'RUN_SERVER', value: this.state.servers}
+                    const action = {type: 'GET_SERVERS', value: this.state.servers}
                     this.props.dispatch(action);
                 }
             })
@@ -87,7 +87,8 @@ class ListServer extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        servers: state.servers
+        servers: state.servers,
+        userData: state.userData,
     };
 }
 

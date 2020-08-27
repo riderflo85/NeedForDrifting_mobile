@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import { detailServerStyle } from '../static/styles';
+import { itemServerStyle } from '../static/styles';
 import { listServersStyle } from '../static/styles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -14,14 +14,14 @@ class ServerItem extends React.Component {
 
     _stateServer() {
         const serverStatus = this.props.server.status;
-        let colorLight;
+        let colorLight = 'white';
 
         if (serverStatus === 'running') {
             colorLight = '#009900';
         } else if (serverStatus === 'stoping') {
             colorLight = '#ff2418';
         }
-        return <View style={[detailServerStyle.stateServerColor, {backgroundColor: colorLight}]}></View>
+        return <View style={[itemServerStyle.stateServerColor, {backgroundColor: colorLight}]}></View>
     }
 
     render() {
@@ -29,22 +29,22 @@ class ServerItem extends React.Component {
 
         return (
             <TouchableOpacity
-                style={detailServerStyle.container}
+                style={itemServerStyle.container}
                 onPress={() => displayServerDetail(this.server.id)}
             >
-                <View style={detailServerStyle.section}>
-                    <View style={detailServerStyle.stateServerBloc}>
+                <View style={itemServerStyle.section}>
+                    <View style={itemServerStyle.stateServerBloc}>
                         <MaterialCommunityIcons name="traffic-light" size={30} color="black"/>
                         {this._stateServer()}
                     </View>
-                    <View style={detailServerStyle.nameServer}>
+                    <View style={itemServerStyle.nameServer}>
                         <Text>{this.server.name}</Text>
                     </View>
-                    <View style={detailServerStyle.rightArrow}>
+                    <View style={itemServerStyle.rightArrow}>
                         <MaterialCommunityIcons name={Platform.OS === 'ios' ? "chevron-right" : "arrow-right"} size={25} color="#0d96d1"/>
                     </View>
                 </View>
-                <View style={detailServerStyle.separator}></View>
+                <View style={itemServerStyle.separator}></View>
             </TouchableOpacity>
         );
     }

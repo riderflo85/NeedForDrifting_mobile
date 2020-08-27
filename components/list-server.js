@@ -64,10 +64,6 @@ class ListServer extends React.Component {
                     <Image source={require('../static/images/stickman_bad.png')}/>
                     <Text style={listServersStyle.notFoundText}>Aucun serveur Assetto n'a été trouvés !</Text>
                     <Text style={listServersStyle.textNoServerIndicateSettings}>Vérifier ou modifier l'url de votre serveur dans vos paramètres</Text>
-                    <View>
-                        <MaterialCommunityIcons name="traffic-light" size={30} color="black"/>
-                        <View style={{width: 8, height: 20, backgroundColor: 'orange', top: -24, left: 11.2, zIndex: -10}}></View>
-                    </View>
                 </View>
             );
         }

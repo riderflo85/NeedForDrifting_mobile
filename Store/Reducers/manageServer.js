@@ -4,7 +4,9 @@ const initialState = {
         username: 'admin',
         password: '',
         token: 'Ihzt3xi5R5jqCMgVVi9UMwmi',
-        urlServer: 'http://192.168.1.32:8000',
+        // urlServer: 'http://192.168.1.32:8000',
+        // urlServer: '',
+        urlServer: 'http://172.20.10.13:8000',
     },
 };
 

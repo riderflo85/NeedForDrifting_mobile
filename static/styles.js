@@ -119,7 +119,7 @@ export const listServersStyle = StyleSheet.create({
 });
 
 
-export const detailServerStyle = StyleSheet.create({
+export const itemServerStyle = StyleSheet.create({
     container: {
         height: 50,
     },
@@ -154,4 +154,66 @@ export const detailServerStyle = StyleSheet.create({
         // marginLeft: '15%',
         backgroundColor: 'rgb(228,228,228)'
     },
+});
+
+
+export const serverDetailStyle = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'rgb(228,228,228)',
+        justifyContent: 'space-between',
+        paddingHorizontal: 15,
+    },
+    borderAndColorBloc: {
+        backgroundColor: 'white',
+        borderRadius: 20,
+    },
+    dataServer: {
+        padding: 15,
+        marginTop: 40,
+    },
+    headerBloc: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 50,
+    },
+    titleServer: {
+        flex: 1,
+        fontSize: 21,
+    },
+    stateServerColor: {
+        width: 10,
+        height: 31,
+        position: "absolute",
+        top: '17%',
+        left: 18,
+        zIndex: -10
+    },
+    bodyBloc: {
+        flexDirection: 'row',
+        marginBottom: 20,
+    },
+    iconsView: {
+        justifyContent: 'space-between'
+    },
+    dataView: {
+        flex: 1,
+        marginLeft: 5,
+        justifyContent: 'space-around'
+    },
+    actionServer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        marginBottom: 30,
+        marginHorizontal: '10%'
+    },
+    buttonAction: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 45,
+        height: 45,
+        borderRadius: 10,
+    }, 
 });

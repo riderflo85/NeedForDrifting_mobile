@@ -4,9 +4,11 @@ const initialState = {
         username: 'admin',
         password: '',
         token: 'Ihzt3xi5R5jqCMgVVi9UMwmi',
-        // urlServer: 'http://192.168.1.32:8000',
+        // token: 'Ihzt3xi5R5jqCMgVVi9UMwmi',
+        // urlServer: 'http://192.168.1.31:8000',
         // urlServer: '',
         urlServer: 'http://172.20.10.13:8000',
+        isLogin: false,
     },
 };
 
@@ -20,7 +22,16 @@ function manageServer(state=initialState, action) {
                 servers: action.value
             };
             return nextState || state // renvoi nextState si celui-ci est différent de undefined
-    
+
+        case 'SAVE_USER_DATA':
+            nextState = state
+            nextState.userData.username = action.value.username;
+            nextState.userData.password = action.value.password;
+            nextState.userData.token = action.value.token;
+            nextState.userData.isLogin = action.value.login;
+
+            return nextState || state
+
         default:
             return state;
     }

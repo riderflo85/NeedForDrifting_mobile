@@ -1,19 +1,17 @@
 import React from 'react';
 import { View, TextInput, Text, Image, Switch, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
+import { connect } from 'react-redux';
 import { loginStyle, loginStyleError } from '../static/styles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { authenticateUser } from '../api/NFD_api';
 
 
 class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            stayConnected: true,
-            connected: false,
-            errorLogin: false,
             isLoading: false,
+            stayConnected: true,
         };
         this.username = '';
         this.password = '';
@@ -38,26 +36,8 @@ class Login extends React.Component {
         });
     }
 
-    _loginUser() {
-        this.setState({isLoading: true});
-        authenticateUser(this.username, this.password, this.api).then(data => {
-            if (!data.error) {
-                this.setState({
-                    connected: true,
-                    errorLogin: false,
-                });
-            } else {
-                this.setState({
-                    connected: false,
-                    errorLogin: true,
-                });
-            }
-            this.setState({isLoading: false});
-        })
-    }
-
     _ifLoginError() {
-        if (!this.state.errorLogin) {
+        if (!this.props.errorLogin) {
             return (
                 <Text style={loginStyle.welcome}>Bienvenue !</Text>
             );
@@ -116,7 +96,7 @@ class Login extends React.Component {
                             </View>
                             <TouchableOpacity
                                 style={loginStyle.buttonLogin}
-                                onPress={() => this._loginUser()}
+                                onPress={() => this.props.sendLogin(this.username, this.password, this.api)}
                             >
                                 <View style={loginStyle.blocButtonLogin}>
                                     <Text style={loginStyle.textButtonLogin}>CONNEXION</Text>
@@ -137,4 +117,13 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+
+const mapStateToProps = (state) => {
+    return {
+        servers: state.servers,
+        userData: state.userData,
+    };
+}
+
+
+export default connect(mapStateToProps)(Login);

@@ -3,7 +3,7 @@ import { View, Text, StatusBar, Image, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { listServersStyle } from '../static/styles';
-import { getAllServers } from '../api/NFD_api';
+import { getAllServers, getTracks } from '../api/NFD_api';
 import ServerItem from './server-item';
 
 
@@ -12,6 +12,7 @@ class ListServer extends React.Component {
         super(props);
         this.state = {
             servers: [],
+            tracks: [],
         };
         this.token = this.props.userData.token; 
         this.username = this.props.userData.username; 
@@ -21,16 +22,33 @@ class ListServer extends React.Component {
     _getServers() {
         if (this.urlServer !== "") {
             getAllServers(this.urlServer, this.username, this.token).then(data => {
-                this.setState({servers: data.servers});
+
+                this.setState({
+                    ...this.state,
+                    servers: data.servers,
+                });
+
                 if (this.props.servers.length === 0) {
-                    // console.log('test');
-                    // console.log(this.state.servers);
                     const action = {type: 'GET_SERVERS', value: this.state.servers}
                     this.props.dispatch(action);
                 }
-            })
+            });
         }
-        
+    }
+
+    _getTracks() {
+        getTracks(this.urlServer, this.username, this.token).then(data => {
+
+            this.setState({
+                ...this.state,
+                tracks: data.tracks,
+            });
+
+            if (this.props.tracks.length === 0) {
+                const action = {type: 'GET_TRACKS', value: this.state.tracks}
+                this.props.dispatch(action);
+            }
+        });
     }
 
     _displayServerDetail = (idServer) => {
@@ -59,6 +77,7 @@ class ListServer extends React.Component {
 
         } else {
             this._getServers();
+            this._getTracks();
             return (
                 <View style={listServersStyle.noServerBloc}>
                     <Image source={require('../static/images/stickman_bad.png')}/>
@@ -85,6 +104,7 @@ const mapStateToProps = (state) => {
     return {
         servers: state.servers,
         userData: state.userData,
+        tracks: state.tracks,
     };
 }
 

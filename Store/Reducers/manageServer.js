@@ -1,5 +1,6 @@
 const initialState = {
     servers: [],
+    tracks: [],
     userData: {
         username: 'admin',
         password: '',
@@ -22,6 +23,13 @@ function manageServer(state=initialState, action) {
                 servers: action.value
             };
             return nextState || state // renvoi nextState si celui-ci est différent de undefined
+
+        case 'GET_TRACKS':
+            nextState = {
+                ...state,
+                tracks: action.value
+            };
+            return nextState || state
 
         case 'SAVE_USER_DATA':
             nextState = state

@@ -3,12 +3,12 @@ const initialState = {
     userData: {
         username: 'admin',
         password: '',
+        // token: '',
         token: 'Ihzt3xi5R5jqCMgVVi9UMwmi',
-        // token: 'Ihzt3xi5R5jqCMgVVi9UMwmi',
-        // urlServer: 'http://192.168.1.31:8000',
+        urlServer: 'http://192.168.1.19:8000',
         // urlServer: '',
-        urlServer: 'http://172.20.10.13:8000',
-        isLogin: false,
+        // urlServer: 'http://172.20.10.13:8000',
+        isLogin: true,
     },
 };
 

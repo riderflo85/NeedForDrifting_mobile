@@ -161,7 +161,7 @@ export const serverDetailStyle = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'rgb(228,228,228)',
-        justifyContent: 'space-between',
+        // justifyContent: 'space-between',
         paddingHorizontal: 15,
     },
     borderAndColorBloc: {
@@ -170,7 +170,8 @@ export const serverDetailStyle = StyleSheet.create({
     },
     dataServer: {
         padding: 15,
-        marginTop: 40,
+        marginTop: 20,
+        marginBottom: 20,
     },
     headerBloc: {
         flexDirection: 'row',
@@ -216,4 +217,27 @@ export const serverDetailStyle = StyleSheet.create({
         height: 45,
         borderRadius: 10,
     }, 
+});
+
+export const trackStyle = StyleSheet.create({
+    main: {
+        padding: 15,
+        marginBottom: 20,
+    },
+    titleBloc: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    iosButtonChoice: {
+        marginVertical: 20,
+    },
+    valideButton: {
+        width: '30%',
+        padding: 6,
+        backgroundColor: '#28a745',
+        borderRadius: 17,
+        justifyContent: 'center',
+        alignSelf: 'flex-end'
+    },
 });

@@ -232,12 +232,15 @@ export const trackStyle = StyleSheet.create({
     iosButtonChoice: {
         marginVertical: 20,
     },
+    footerBloc: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
     valideButton: {
         width: '30%',
         padding: 6,
         backgroundColor: '#28a745',
         borderRadius: 17,
         justifyContent: 'center',
-        alignSelf: 'flex-end'
     },
 });

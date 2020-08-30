@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, Text, TextInput, TouchableOpacity, Picker, Modal, Platform, Button } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Picker, Modal, Platform, Button, Alert } from 'react-native';
 import { serverDetailStyle, loginStyle, trackStyle } from '../static/styles';
 
 
@@ -8,9 +8,55 @@ class UpdateTrack extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            track: 'Tsukuba',
+            tracks: this.props.tracks,
+            trackSelected: '',
             visible: false
         }
+        this.configNewTrack = {input: undefined, value: undefined};
+        this.maxClients = {input: undefined, value: undefined};
+    }
+
+    _trackSelector() {
+        let test = this.state.tracks.map((val, index) => {
+            return (
+                <Picker.Item label={val.name} value={val.folder_name} key={index}/>
+            );
+        });
+
+        return test;
+    }
+
+    _trackSelected(value, index) {
+        if (value !== 'null') {
+            let newIndex = Platform.OS === 'ios' ? index : index - 1;
+            this.setState({
+                trackSelected: {folder_name: value, name: this.state.tracks[newIndex].name}
+            });
+        }
+    }
+
+    _iosDisplayTrackSelected() {
+        if (Platform.OS === 'ios') {
+            return <Text style={{color: 'black'}}>{this.state.trackSelected.name}</Text>;
+        }
+    }
+
+    _displayAlert() {
+        this.configNewTrack.input.clear();
+        this.maxClients.input.clear();
+        console.log(this.state.trackSelected);
+        this.setState({trackSelected: ''});
+
+        Alert.alert(
+            'Information',
+            'Le changement de la piste ne redémarre pas le serveur !!!',
+            [
+                {
+                    text: "OK"
+                }
+            ],
+            { cancelable: false }
+        )
     }
 
     _displayPicker() {
@@ -22,19 +68,16 @@ class UpdateTrack extends React.Component {
                             <View style={{backgroundColor: 'rgb(255, 255, 255)', borderRadius: 20}}>
                                 <View style={{height: 50}}>
                                     <Picker
-                                        selectedValue={'trackTree'}
+                                        selectedValue={this.state.trackSelected.folder_name}
                                         style={{height: 50, width: '100%'}}
+                                        onValueChange={this._trackSelected.bind(this)}
                                     >
-                                        <Picker.Item label="Piste O1" value="trackOne"/>
-                                        <Picker.Item label="Piste O2" value="trackTwo"/>
-                                        <Picker.Item label="Piste O3" value="trackTree"/>
-                                        <Picker.Item label="Piste O4" value="trackFour"/>
-                                        <Picker.Item label="Piste O5" value="trackFive"/>
+                                        {this._trackSelector()}
                                     </Picker>
                                 </View>
                                 <View style={{flexDirection: 'row', justifyContent: 'space-around', marginTop: '40%', marginBottom: '5%'}}>
-                                    <Button title="Annuler" color='red' onPress={() => this.setState({visible: false})}/>
-                                    <Button title="Valider"/>
+                                    <Button title="Annuler" color='red' onPress={() => this.setState({visible: false, trackSelected: ''})}/>
+                                    <Button title="Valider" onPress={() => this.setState({visible: false})}/>
                                 </View>
                             </View>
                         </View>
@@ -45,14 +88,12 @@ class UpdateTrack extends React.Component {
         } else {
             return (
                 <Picker
-                    selectedValue={'trackTree'}
+                    selectedValue={this.state.trackSelected.folder_name}
                     style={{height: 50, width: '100%', marginVertical: 10}}
+                    onValueChange={this._trackSelected.bind(this)}
                 >
-                    <Picker.Item label="Piste O1" value="trackOne"/>
-                    <Picker.Item label="Piste O2" value="trackTwo"/>
-                    <Picker.Item label="Piste O3" value="trackTree"/>
-                    <Picker.Item label="Piste O4" value="trackFour"/>
-                    <Picker.Item label="Piste O5" value="trackFive"/>
+                    <Picker.Item label="Choisissez une piste" value="null"/>
+                    {this._trackSelector()}
                 </Picker>
             );
         }
@@ -62,15 +103,27 @@ class UpdateTrack extends React.Component {
         return (
             <View style={[serverDetailStyle.borderAndColorBloc, trackStyle.main]}>
                 <Text style={trackStyle.titleBloc}>Changer la piste du serveur !</Text>
-                <Text style={loginStyle.titleInput}>Nom de la piste :</Text>
+                <Text style={loginStyle.titleInput}><Text style={{color: '#dc3545'}}>*</Text>Nom de la piste : {this._iosDisplayTrackSelected()}</Text>
                 {this._displayPicker()}
                 <Text style={loginStyle.titleInput}>Configuration de la piste (Sous piste) :</Text>
-                <TextInput style={loginStyle.inputArea}/>
-                <Text style={loginStyle.titleInput}>Client max (PitBox) :</Text>
-                <TextInput style={loginStyle.inputArea} keyboardType="decimal-pad"/>
-                <TouchableOpacity style={trackStyle.valideButton}>
-                    <Text style={{textAlign: 'center', color: 'white', fontSize: 17}}>Valider</Text>
-                </TouchableOpacity>
+                <TextInput
+                    style={loginStyle.inputArea}
+                    onChangeText={(text) => this.configNewTrack.value = text}
+                    ref={input => {this.configNewTrack.input = input}}
+                />
+                <Text style={loginStyle.titleInput}><Text style={{color: '#dc3545'}}>*</Text>Client max (PitBox) :</Text>
+                <TextInput
+                    style={loginStyle.inputArea}
+                    keyboardType="decimal-pad"
+                    onChangeText={(text) => this.maxClients.value = text}
+                    ref={input => {this.maxClients.input = input}}
+                />
+                <View style={trackStyle.footerBloc}>
+                    <Text style={{alignSelf: 'flex-end', color: '#737373'}}><Text style={{color: '#dc3545'}}>*</Text>Champs obligatoires</Text>
+                    <TouchableOpacity style={trackStyle.valideButton} onPress={this._displayAlert.bind(this)}>
+                        <Text style={{textAlign: 'center', color: 'white', fontSize: 17}}>Valider</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }
@@ -80,7 +133,8 @@ class UpdateTrack extends React.Component {
 const mapStateToProps = (state) => {
     return {
         servers: state.servers,
-        userData: state.userData
+        userData: state.userData,
+        tracks: state.tracks
     };
 }
 

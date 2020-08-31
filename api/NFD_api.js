@@ -22,8 +22,8 @@ export function getTracks(url, username, token) {
     .catch((error) => console.log(error));
 }
 
-export function changeTrack(url, username, token, idServer,idTrack, configTrack, maxClients) {
-    const newUrl = `${url}/api/v1/change_track?username${username}&api=${token}&server_id=${idServer}&track_id=${idTrack}&config_track=${configTrack}&max_clients=${maxClients}`;
+export function changeTrack(url, username, token, idServer, idTrack, configTrack, maxClients) {
+    const newUrl = `${url}/api/v1/change_track?username=${username}&api=${token}&server_id=${idServer}&track_id=${idTrack}&config_track=${configTrack}&max_clients=${maxClients}`;
 
     return fetch(newUrl)
     .then((response) => response.json())

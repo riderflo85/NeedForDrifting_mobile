@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { View, Text, TextInput, TouchableOpacity, Picker, Modal, Platform, Button, Alert } from 'react-native';
 import { serverDetailStyle, loginStyle, trackStyle } from '../static/styles';
+import { changeTrack } from '../api/NFD_api';
 
 
 class UpdateTrack extends React.Component {
@@ -12,8 +13,8 @@ class UpdateTrack extends React.Component {
             trackSelected: '',
             visible: false
         }
-        this.configNewTrack = {input: undefined, value: undefined};
-        this.maxClients = {input: undefined, value: undefined};
+        this.configNewTrack = {input: undefined, value: ''};
+        this.maxClients = {input: undefined, value: ''};
     }
 
     _trackSelector(tracks) {
@@ -39,7 +40,11 @@ class UpdateTrack extends React.Component {
         if (value !== 'null') {
             let newIndex = Platform.OS === 'ios' ? index : index - 1;
             this.setState({
-                trackSelected: {folder_name: value, name: this.state.tracks[newIndex].name}
+                trackSelected: {
+                    id: this.state.tracks[newIndex].id,
+                    folder_name: value,
+                    name: this.state.tracks[newIndex].name,
+                }
             });
         }
     }
@@ -50,11 +55,8 @@ class UpdateTrack extends React.Component {
         }
     }
 
-    _displayAlert(test) {
-        test();
-        this.configNewTrack.input.clear();
-        this.maxClients.input.clear();
-        this.setState({trackSelected: ''});
+    _displayAlert() {
+        let user = this.props.userData;
 
         Alert.alert(
             'Information',
@@ -65,7 +67,22 @@ class UpdateTrack extends React.Component {
                 }
             ],
             { cancelable: false }
-        )
+        );
+        changeTrack(
+            user.urlServer,
+            user.username,
+            user.token,
+            this.props.server.id,
+            this.state.trackSelected.id,
+            this.configNewTrack.value,
+            this.maxClients.value
+        ).then(data => {
+            if (data.state) {
+                this.configNewTrack.input.clear();
+                this.maxClients.input.clear();
+                this.setState({trackSelected: ''});
+            }
+        });
     }
 
     _displayPicker(tracks) {
@@ -110,7 +127,6 @@ class UpdateTrack extends React.Component {
 
     render() {
         const tracksUpdated = this.props.updateTracks;
-        const serverUpdated = this.props.updateServer;
         return (
             <View style={[serverDetailStyle.borderAndColorBloc, trackStyle.main]}>
                 <Text style={trackStyle.titleBloc}>Changer la piste du serveur !</Text>
@@ -131,7 +147,7 @@ class UpdateTrack extends React.Component {
                 />
                 <View style={trackStyle.footerBloc}>
                     <Text style={{alignSelf: 'flex-end', color: '#737373'}}><Text style={{color: '#dc3545'}}>*</Text>Champs obligatoires</Text>
-                    <TouchableOpacity style={trackStyle.valideButton} onPress={this._displayAlert.bind(this)(serverUpdated)}>
+                    <TouchableOpacity style={trackStyle.valideButton} onPress={this._displayAlert.bind(this)}>
                         <Text style={{textAlign: 'center', color: 'white', fontSize: 17}}>Valider</Text>
                     </TouchableOpacity>
                 </View>

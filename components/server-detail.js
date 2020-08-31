@@ -5,7 +5,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { serverDetailStyle } from '../static/styles';
 import UpdateTrack from './update-track';
-import { getTracks } from '../api/NFD_api';
+import { getTracks, getAllServers } from '../api/NFD_api';
 
 
 
@@ -26,10 +26,6 @@ class DetailServer extends React.Component {
         this.props.navigation.setOptions({title: this.state.server.name})
     }
 
-    test() {
-        console.log('in test');
-    }
-
     _stateServer() {
         const serverStatus = this.state.server.status;
         let colorLight = 'white';
@@ -44,15 +40,22 @@ class DetailServer extends React.Component {
 
     _onRefresh() {
         this.refreshing = true;
-        getTracks(this.urlServer, this.username, this.token).then(data => {
+        getTracks(this.urlServer, this.username, this.token).then(tracksData => {
 
-            this.refreshing = false;
-            this.setState({
-                ...this.state,
-                tracks: data.tracks,
+            let tracksUpdated = tracksData.tracks;
+
+            getAllServers(this.urlServer, this.username, this.token).then(serversData => {
+                this.refreshing = false;
+                this.setState({
+                    ...this.state,
+                    tracks: tracksUpdated,
+                    server: serversData.servers.filter(el => el.id === this.props.route.params.idServer)[0]
+                });
+                const action1 = {type: 'GET_SERVERS', value: serversData.servers};
+                this.props.dispatch(action1);
             });
-            const action = {type: 'GET_TRACKS', value: this.state.tracks}
-            this.props.dispatch(action);
+            const action2 = {type: 'GET_TRACKS', value: this.state.tracks};
+            this.props.dispatch(action2);
         });
     }
 
@@ -84,7 +87,7 @@ class DetailServer extends React.Component {
                                 </View>
                             </View>
                         </View>
-                        <UpdateTrack updateTracks={this.state.tracks} updateServer={this.test.bind(this)}/>
+                        <UpdateTrack updateTracks={this.state.tracks} server={this.state.server}/>
                         <View style={[serverDetailStyle.borderAndColorBloc, serverDetailStyle.actionServer]}>
                             <View style={[serverDetailStyle.buttonAction, {backgroundColor: '#16a0b6', borderWidth: 3, borderColor: '#148c9f'}]}>
                                 <MaterialCommunityIcons name="information-outline" size={30} color="white"/>

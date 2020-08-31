@@ -50,7 +50,8 @@ class UpdateTrack extends React.Component {
         }
     }
 
-    _displayAlert() {
+    _displayAlert(test) {
+        test();
         this.configNewTrack.input.clear();
         this.maxClients.input.clear();
         this.setState({trackSelected: ''});
@@ -109,6 +110,7 @@ class UpdateTrack extends React.Component {
 
     render() {
         const tracksUpdated = this.props.updateTracks;
+        const serverUpdated = this.props.updateServer;
         return (
             <View style={[serverDetailStyle.borderAndColorBloc, trackStyle.main]}>
                 <Text style={trackStyle.titleBloc}>Changer la piste du serveur !</Text>
@@ -129,7 +131,7 @@ class UpdateTrack extends React.Component {
                 />
                 <View style={trackStyle.footerBloc}>
                     <Text style={{alignSelf: 'flex-end', color: '#737373'}}><Text style={{color: '#dc3545'}}>*</Text>Champs obligatoires</Text>
-                    <TouchableOpacity style={trackStyle.valideButton} onPress={this._displayAlert.bind(this)}>
+                    <TouchableOpacity style={trackStyle.valideButton} onPress={this._displayAlert.bind(this)(serverUpdated)}>
                         <Text style={{textAlign: 'center', color: 'white', fontSize: 17}}>Valider</Text>
                     </TouchableOpacity>
                 </View>

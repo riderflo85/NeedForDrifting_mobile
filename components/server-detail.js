@@ -26,6 +26,10 @@ class DetailServer extends React.Component {
         this.props.navigation.setOptions({title: this.state.server.name})
     }
 
+    test() {
+        console.log('in test');
+    }
+
     _stateServer() {
         const serverStatus = this.state.server.status;
         let colorLight = 'white';
@@ -80,7 +84,7 @@ class DetailServer extends React.Component {
                                 </View>
                             </View>
                         </View>
-                        <UpdateTrack updateTracks={this.state.tracks}/>
+                        <UpdateTrack updateTracks={this.state.tracks} updateServer={this.test.bind(this)}/>
                         <View style={[serverDetailStyle.borderAndColorBloc, serverDetailStyle.actionServer]}>
                             <View style={[serverDetailStyle.buttonAction, {backgroundColor: '#16a0b6', borderWidth: 3, borderColor: '#148c9f'}]}>
                                 <MaterialCommunityIcons name="information-outline" size={30} color="white"/>

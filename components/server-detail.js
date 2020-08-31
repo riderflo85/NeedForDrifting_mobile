@@ -1,18 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { serverDetailStyle } from '../static/styles';
 import UpdateTrack from './update-track';
+import { getTracks } from '../api/NFD_api';
+
 
 
 class DetailServer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            server: this.props.servers.filter(el => el.id === this.props.route.params.idServer)[0]
+            server: this.props.servers.filter(el => el.id === this.props.route.params.idServer)[0],
+            tracks: [],
         };
+        this.username = this.props.userData.username;
+        this.urlServer = this.props.userData.urlServer;
+        this.token = this.props.userData.token;
+        this.refreshing = false;
     }
 
     componentDidMount() {
@@ -31,11 +38,27 @@ class DetailServer extends React.Component {
         return <View style={[serverDetailStyle.stateServerColor, {backgroundColor: colorLight}]}></View>
     }
 
-    render() {        
+    _onRefresh() {
+        this.refreshing = true;
+        getTracks(this.urlServer, this.username, this.token).then(data => {
+
+            this.refreshing = false;
+            this.setState({
+                ...this.state,
+                tracks: data.tracks,
+            });
+            const action = {type: 'GET_TRACKS', value: this.state.tracks}
+            this.props.dispatch(action);
+        });
+    }
+
+    render() {
         return (
             <View style={serverDetailStyle.container}>
-                <KeyboardAwareScrollView>
-                    <ScrollView>
+                <ScrollView contentContainerStyle={{flex: 1}} refreshControl={
+                    <RefreshControl refreshing={this.refreshing} onRefresh={this._onRefresh.bind(this)}/>
+                }>
+                    <KeyboardAwareScrollView>
                         <View style={[serverDetailStyle.borderAndColorBloc, serverDetailStyle.dataServer]}>
                             <View style={serverDetailStyle.headerBloc}>
                                 <View style={{justifyContent: 'center', marginRight: 10}}>
@@ -57,7 +80,7 @@ class DetailServer extends React.Component {
                                 </View>
                             </View>
                         </View>
-                        <UpdateTrack/>
+                        <UpdateTrack updateTracks={this.state.tracks}/>
                         <View style={[serverDetailStyle.borderAndColorBloc, serverDetailStyle.actionServer]}>
                             <View style={[serverDetailStyle.buttonAction, {backgroundColor: '#16a0b6', borderWidth: 3, borderColor: '#148c9f'}]}>
                                 <MaterialCommunityIcons name="information-outline" size={30} color="white"/>
@@ -72,8 +95,8 @@ class DetailServer extends React.Component {
                                 <MaterialCommunityIcons name="stop-circle-outline" size={30} color="white"/>
                             </View>
                         </View>
-                    </ScrollView>
-                </KeyboardAwareScrollView>
+                    </KeyboardAwareScrollView>
+                </ScrollView>
             </View>
         );
     }
@@ -85,6 +108,7 @@ const mapStateToProps = (state) => {
     return {
         servers: state.servers,
         userData: state.userData,
+        tracks: state.tracks,
     };
 }
 

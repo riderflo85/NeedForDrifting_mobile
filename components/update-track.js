@@ -16,14 +16,23 @@ class UpdateTrack extends React.Component {
         this.maxClients = {input: undefined, value: undefined};
     }
 
-    _trackSelector() {
-        let test = this.state.tracks.map((val, index) => {
+    _trackSelector(tracks) {
+        let allTracks;
+        if (tracks.length === 0) {
+            allTracks = this.state.tracks;
+        } else {
+            allTracks = tracks;
+            if (tracks.length !== this.state.tracks.length) {
+                this.setState({...this.state, tracks: allTracks});
+            }
+        }
+        let pickerItem = allTracks.map((val, index) => {
             return (
                 <Picker.Item label={val.name} value={val.folder_name} key={index}/>
             );
         });
 
-        return test;
+        return pickerItem;
     }
 
     _trackSelected(value, index) {
@@ -44,7 +53,6 @@ class UpdateTrack extends React.Component {
     _displayAlert() {
         this.configNewTrack.input.clear();
         this.maxClients.input.clear();
-        console.log(this.state.trackSelected);
         this.setState({trackSelected: ''});
 
         Alert.alert(
@@ -59,7 +67,7 @@ class UpdateTrack extends React.Component {
         )
     }
 
-    _displayPicker() {
+    _displayPicker(tracks) {
         if (Platform.OS === 'ios') {
             return (
                 <View style={trackStyle.iosButtonChoice}>
@@ -72,7 +80,7 @@ class UpdateTrack extends React.Component {
                                         style={{height: 50, width: '100%'}}
                                         onValueChange={this._trackSelected.bind(this)}
                                     >
-                                        {this._trackSelector()}
+                                        {this._trackSelector(tracks)}
                                     </Picker>
                                 </View>
                                 <View style={{flexDirection: 'row', justifyContent: 'space-around', marginTop: '40%', marginBottom: '5%'}}>
@@ -93,18 +101,19 @@ class UpdateTrack extends React.Component {
                     onValueChange={this._trackSelected.bind(this)}
                 >
                     <Picker.Item label="Choisissez une piste" value="null"/>
-                    {this._trackSelector()}
+                    {this._trackSelector(tracks)}
                 </Picker>
             );
         }
     }
 
     render() {
+        const tracksUpdated = this.props.updateTracks;
         return (
             <View style={[serverDetailStyle.borderAndColorBloc, trackStyle.main]}>
                 <Text style={trackStyle.titleBloc}>Changer la piste du serveur !</Text>
                 <Text style={loginStyle.titleInput}><Text style={{color: '#dc3545'}}>*</Text>Nom de la piste : {this._iosDisplayTrackSelected()}</Text>
-                {this._displayPicker()}
+                {this._displayPicker(tracksUpdated)}
                 <Text style={loginStyle.titleInput}>Configuration de la piste (Sous piste) :</Text>
                 <TextInput
                     style={loginStyle.inputArea}

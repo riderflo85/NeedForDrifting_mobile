@@ -9,10 +9,10 @@ class UpdateTrack extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            tracks: this.props.tracks,
             trackSelected: '',
             visible: false
         }
+        this.tracks = this.props.tracks;
         this.configNewTrack = {input: undefined, value: ''};
         this.maxClients = {input: undefined, value: ''};
     }
@@ -20,11 +20,11 @@ class UpdateTrack extends React.Component {
     _trackSelector(tracks) {
         let allTracks;
         if (tracks.length === 0) {
-            allTracks = this.state.tracks;
+            allTracks = this.tracks;
         } else {
             allTracks = tracks;
-            if (tracks.length !== this.state.tracks.length) {
-                this.setState({...this.state, tracks: allTracks});
+            if (tracks.length !== this.tracks.length) {
+                this.tracks = allTracks;
             }
         }
         let pickerItem = allTracks.map((val, index) => {
@@ -41,9 +41,9 @@ class UpdateTrack extends React.Component {
             let newIndex = Platform.OS === 'ios' ? index : index - 1;
             this.setState({
                 trackSelected: {
-                    id: this.state.tracks[newIndex].id,
+                    id: this.tracks[newIndex].id,
                     folder_name: value,
-                    name: this.state.tracks[newIndex].name,
+                    name: this.tracks[newIndex].name,
                 }
             });
         }

@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, Text, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, RefreshControl, ActivityIndicator } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { serverDetailStyle } from '../static/styles';
 import UpdateTrack from './update-track';
-import { getTracks, getAllServers } from '../api/NFD_api';
+import { getTracks, getAllServers, runCommand } from '../api/NFD_api';
 
 
 
@@ -14,8 +14,9 @@ class DetailServer extends React.Component {
         super(props);
         this.state = {
             server: this.props.servers.filter(el => el.id === this.props.route.params.idServer)[0],
-            tracks: [],
+            isLoading: false,
         };
+        this.tracks = [];
         this.username = this.props.userData.username;
         this.urlServer = this.props.userData.urlServer;
         this.token = this.props.userData.token;
@@ -34,6 +35,8 @@ class DetailServer extends React.Component {
             colorLight = '#009900';
         } else if (serverStatus === 'stoping') {
             colorLight = '#ff2418';
+        } else {
+            colorLight = '#9900ff';
         }
         return <View style={[serverDetailStyle.stateServerColor, {backgroundColor: colorLight}]}></View>
     }
@@ -42,21 +45,89 @@ class DetailServer extends React.Component {
         this.refreshing = true;
         getTracks(this.urlServer, this.username, this.token).then(tracksData => {
 
-            let tracksUpdated = tracksData.tracks;
+            this.tracks = tracksData.tracks;
 
             getAllServers(this.urlServer, this.username, this.token).then(serversData => {
                 this.refreshing = false;
                 this.setState({
                     ...this.state,
-                    tracks: tracksUpdated,
                     server: serversData.servers.filter(el => el.id === this.props.route.params.idServer)[0]
                 });
                 const action1 = {type: 'GET_SERVERS', value: serversData.servers};
                 this.props.dispatch(action1);
             });
-            const action2 = {type: 'GET_TRACKS', value: this.state.tracks};
+            const action2 = {type: 'GET_TRACKS', value: this.tracks};
             this.props.dispatch(action2);
         });
+    }
+
+    _toogleServerStatus() {
+        const action = {type: 'RUN_CMD_SERVER', value: this.state.server};
+        this.props.dispatch(action);
+    }
+
+    _runCommandServer(cmd) {
+        this.setState({...this.state, isLoading: true});
+        runCommand(this.urlServer, this.username, this.token, this.state.server.id, cmd).then(data => {
+            let status;
+            if (data.res === 'run') {
+                status = 'running';
+            } else if (data.res === 'kill') {
+                status = 'stopping';
+            } else {
+                status = 'error';
+            }
+            this.setState({
+                ...this.state,
+                isLoading: false,
+                server: {
+                    id: this.state.server.id,
+                    name: this.state.server.name,
+                    status: status,
+                    track: this.state.server.track
+                }
+            });
+            this._toogleServerStatus();
+        });
+    }
+
+    _displayLoading() {
+        if (this.state.isLoading) {
+            return (
+                <View style={[serverDetailStyle.borderAndColorBloc, serverDetailStyle.actionServer]}>
+                    <ActivityIndicator size="large"/>
+                </View>
+            );
+        } else {
+            return (
+                <View style={[serverDetailStyle.borderAndColorBloc, serverDetailStyle.actionServer]}>
+                    <TouchableOpacity 
+                        style={[serverDetailStyle.buttonAction, {backgroundColor: '#16a0b6', borderWidth: 3, borderColor: '#148c9f'}]}
+                        onPress={() => this._runCommandServer('status')}
+                    >
+                        <MaterialCommunityIcons name="information-outline" size={30} color="white"/>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[serverDetailStyle.buttonAction, {backgroundColor: '#28a745', borderWidth: 3, borderColor: '#23903c'}]}
+                        onPress={() => this._runCommandServer('start')}
+                    >
+                        <MaterialCommunityIcons name="play-speed" size={30} color="white"/>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[serverDetailStyle.buttonAction, {backgroundColor: '#ffc107', borderWidth: 3, borderColor: '#e6ac00'}]}
+                        onPress={() => this._runCommandServer('restart')}
+                    >
+                        <MaterialCommunityIcons name="restart" size={30} color="white"/>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[serverDetailStyle.buttonAction, {backgroundColor: '#dc3545', borderWidth: 3, borderColor: '#c32232'}]}
+                        onPress={() => this._runCommandServer('stop')}
+                    >
+                        <MaterialCommunityIcons name="stop-circle-outline" size={30} color="white"/>
+                    </TouchableOpacity>
+                </View>
+            );
+        }
     }
 
     render() {
@@ -87,21 +158,8 @@ class DetailServer extends React.Component {
                                 </View>
                             </View>
                         </View>
-                        <UpdateTrack updateTracks={this.state.tracks} server={this.state.server}/>
-                        <View style={[serverDetailStyle.borderAndColorBloc, serverDetailStyle.actionServer]}>
-                            <View style={[serverDetailStyle.buttonAction, {backgroundColor: '#16a0b6', borderWidth: 3, borderColor: '#148c9f'}]}>
-                                <MaterialCommunityIcons name="information-outline" size={30} color="white"/>
-                            </View>
-                            <View style={[serverDetailStyle.buttonAction, {backgroundColor: '#28a745', borderWidth: 3, borderColor: '#23903c'}]}>
-                                <MaterialCommunityIcons name="play-speed" size={30} color="white"/>
-                            </View>
-                            <View style={[serverDetailStyle.buttonAction, {backgroundColor: '#ffc107', borderWidth: 3, borderColor: '#e6ac00'}]}>
-                                <MaterialCommunityIcons name="restart" size={30} color="white"/>
-                            </View>
-                            <View style={[serverDetailStyle.buttonAction, {backgroundColor: '#dc3545', borderWidth: 3, borderColor: '#c32232'}]}>
-                                <MaterialCommunityIcons name="stop-circle-outline" size={30} color="white"/>
-                            </View>
-                        </View>
+                        <UpdateTrack updateTracks={this.tracks} server={this.state.server}/>
+                        {this._displayLoading()}
                     </KeyboardAwareScrollView>
                 </ScrollView>
             </View>

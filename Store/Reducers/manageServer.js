@@ -22,14 +22,15 @@ function manageServer(state=initialState, action) {
                 ...state,
                 servers: action.value
             };
-            return nextState || state // renvoi nextState si celui-ci est différent de undefined
+            console.log(nextState);
+            return nextState || state; // renvoi nextState si celui-ci est différent de undefined
 
         case 'GET_TRACKS':
             nextState = {
                 ...state,
                 tracks: action.value
             };
-            return nextState || state
+            return nextState || state;
 
         case 'SAVE_USER_DATA':
             nextState = state
@@ -38,7 +39,18 @@ function manageServer(state=initialState, action) {
             nextState.userData.token = action.value.token;
             nextState.userData.isLogin = action.value.login;
 
-            return nextState || state
+            return nextState || state;
+
+        case 'RUN_CMD_SERVER':
+            const serverIndex = state.servers.findIndex(el => el.id === action.value.id);
+            let servers = state.servers;
+            servers[serverIndex] = action.value;
+            
+            nextState = {
+                ...state,
+                servers: servers
+            };
+            return nextState || state;
 
         default:
             return state;

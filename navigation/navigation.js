@@ -84,7 +84,7 @@ class BottomNavigation extends React.Component {
                                 iconName = 'server-network';
 
                             } else if (route.name === "Settings") {
-                                iconName = 'account-settings';
+                                iconName = 'account-edit';
 
                             }
 

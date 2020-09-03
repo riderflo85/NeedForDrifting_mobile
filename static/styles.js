@@ -131,9 +131,6 @@ export const itemServerStyle = StyleSheet.create({
         paddingHorizontal: 15,
         backgroundColor: 'rgba(255, 255, 255, 0)',
     },
-    nameServer: {
-
-    },
     stateServerBloc: {
         justifyContent: 'center'
     },
@@ -145,13 +142,9 @@ export const itemServerStyle = StyleSheet.create({
         left: 11.2,
         zIndex: -10
     },
-    rightArrow: {
-
-    },
     separator: {
         height: 1,
         width: '100%',
-        // marginLeft: '15%',
         backgroundColor: 'rgb(228,228,228)'
     },
 });
@@ -161,7 +154,6 @@ export const serverDetailStyle = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'rgb(228,228,228)',
-        // justifyContent: 'space-between',
         paddingHorizontal: 15,
     },
     borderAndColorBloc: {
@@ -242,5 +234,28 @@ export const trackStyle = StyleSheet.create({
         backgroundColor: '#28a745',
         borderRadius: 17,
         justifyContent: 'center',
+    },
+});
+
+export const settings = StyleSheet.create({
+    main: {
+        justifyContent: 'space-between',
+        paddingTop: 40
+    },
+    section: {
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    separator: {
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
+        borderColor: 'rgb(228,228,228)',
+    },
+    input: {
+        width: '70%',
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgb(228,228,228)',
+        paddingHorizontal: 10
     },
 });

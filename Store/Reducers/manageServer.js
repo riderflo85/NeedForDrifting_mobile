@@ -22,7 +22,6 @@ function manageServer(state=initialState, action) {
                 ...state,
                 servers: action.value
             };
-            console.log(nextState);
             return nextState || state; // renvoi nextState si celui-ci est différent de undefined
 
         case 'GET_TRACKS':
@@ -39,6 +38,15 @@ function manageServer(state=initialState, action) {
             nextState.userData.token = action.value.token;
             nextState.userData.isLogin = action.value.login;
 
+            return nextState || state;
+
+        case 'UPDATE_USER_DATA':
+            nextState = state;
+            nextState.userData.username = action.value.username;
+            nextState.userData.urlServer = action.value.urlServer;
+            nextState.userData.token = action.value.token;
+
+            console.log('nextState is: ', nextState);
             return nextState || state;
 
         case 'RUN_CMD_SERVER':
